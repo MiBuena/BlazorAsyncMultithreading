@@ -2,5 +2,6 @@
 {
     public interface IFileService
     {
+        Task<IEnumerable<string>> ReadFileAsync(IFormFile file);
     }
 }

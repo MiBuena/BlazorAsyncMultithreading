@@ -1,27 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PopulationCensus.Server.Interfaces;
 using System.IO;
 
 namespace PopulationCensus.Server.Controllers
 {
     public class UploadController : ControllerBase
     {
-        [HttpPost("upload/single")]
-        public async Task<IActionResult> MultipleAsync(IFormFile file)
+        private readonly IImportService _importService;
+
+        public UploadController(IImportService importService)
+        {
+            _importService = importService;
+        }
+
+        [HttpPost("upload/age-file")]
+        public async Task<IActionResult> UploadAgeFile(IFormFile file)
         {
             try
             {
-                using (var stream = new StreamReader(System.IO.File.OpenRead(@"C:\Users\Lenovo\Documents\GithubRepositories\PopulationCensus\PopulationCensus\Server\FilesToImport\DimenLookupAge8277.csv")))
-                {
-                    var lines = new List<string>();
+                await _importService.ImportAgeFileAsync(file);
 
-                    string line;
-                    while ((line = await stream.ReadLineAsync()) != null)
-                    {
-                        lines.Add(line);
-                    }
-                }
-
-                // Put your code here
                 return StatusCode(200);
             }
             catch (Exception ex)

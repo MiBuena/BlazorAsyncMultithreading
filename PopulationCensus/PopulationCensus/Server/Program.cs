@@ -16,6 +16,7 @@ builder.Services.AddDbContext<PopulationContext>(options =>
         connectionString: System.Configuration.ConfigurationManager.AppSettings["DefaultConnection"]));
 
 builder.Services.AddTransient<IFileService, LocalFileService>();
+builder.Services.AddTransient<IImportService, ImportService>();
 
 
 var app = builder.Build();
