@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PopulationCensus.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace PopulationCensus.Data.DB
             : base(options)
         {
         }
+
+        public DbSet<Age> Ages { get; set; }
     }
 }

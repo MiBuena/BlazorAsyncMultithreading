@@ -14,13 +14,21 @@ namespace PopulationCensus.Server.Services
 
         public async Task ImportAgeFileAsync(IFormFile file)
         {
-            var fileContent = await _fileService.ReadFileAsync(file);
+            var fileContent = _fileService.ReadFileInPortionsAsync(file);
 
+            await foreach (var item in fileContent)
+            {
+                var a = ExtractAgeEntities(item);
+            }
+        }
+
+        private IEnumerable<Age> ExtractAgeEntities(IEnumerable<string> lines)
+        {
             var collection = new List<Age>();
 
-            foreach (var item in fileContent)
+            foreach (var item2 in lines)
             {
-                var ageData = item.Split(',');
+                var ageData = item2.Split(',');
                 var ageEntity = new Age()
                 {
                     Code = ageData[0],
@@ -29,6 +37,8 @@ namespace PopulationCensus.Server.Services
 
                 collection.Add(ageEntity);
             }
+
+            return collection;
         }
     }
 }

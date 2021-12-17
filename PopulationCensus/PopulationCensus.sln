@@ -9,12 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Shared", "PopulationCensus\Shared\PopulationCensus.Shared.csproj", "{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulationCensus.Data", "PopulationCensus.Data\PopulationCensus.Data.csproj", "{B39414FF-484F-4166-8DA4-3B3388791539}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Data", "PopulationCensus.Data\PopulationCensus.Data.csproj", "{B39414FF-484F-4166-8DA4-3B3388791539}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B4D846B-43B9-4BF2-9F6B-F6A60A2E0DB3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulationCensus.UnitTests", "PopulationCensus.UnitTests\PopulationCensus.UnitTests.csproj", "{6B80F950-6F02-4089-8F3B-5C08E30825EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{B39414FF-484F-4166-8DA4-3B3388791539}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B39414FF-484F-4166-8DA4-3B3388791539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B39414FF-484F-4166-8DA4-3B3388791539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B80F950-6F02-4089-8F3B-5C08E30825EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B80F950-6F02-4089-8F3B-5C08E30825EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B80F950-6F02-4089-8F3B-5C08E30825EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B80F950-6F02-4089-8F3B-5C08E30825EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
