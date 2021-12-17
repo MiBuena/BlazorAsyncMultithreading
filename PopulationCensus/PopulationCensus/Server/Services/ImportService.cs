@@ -1,4 +1,5 @@
 ﻿using PopulationCensus.Data.Entities;
+using PopulationCensus.Data.Interfaces;
 using PopulationCensus.Server.Interfaces;
 
 namespace PopulationCensus.Server.Services
@@ -6,10 +7,12 @@ namespace PopulationCensus.Server.Services
     public class ImportService : IImportService
     {
         private readonly IFileService _fileService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ImportService(IFileService fileService)
+        public ImportService(IFileService fileService, IUnitOfWork unitOfWork)
         {
             _fileService = fileService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ImportAgeFileAsync(IFormFile file)
@@ -18,7 +21,9 @@ namespace PopulationCensus.Server.Services
 
             await foreach (var item in fileContent)
             {
-                var a = ExtractAgeEntities(item);
+                var extractedAges = ExtractAgeEntities(item);
+                _unitOfWork.AgeRepository.AddRange(extractedAges);
+                await _unitOfWork.SaveChangesAsync();
             }
         }
 

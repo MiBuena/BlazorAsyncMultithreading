@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using PopulationCensus.Data.DB;
+using PopulationCensus.Data.Interfaces;
+using PopulationCensus.Data.Repositories;
+using PopulationCensus.Data.UnitOfWork;
 using PopulationCensus.Server.Interfaces;
 using PopulationCensus.Server.Services;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<PopulationContext>(options =>
     options.UseSqlServer(
-        connectionString: System.Configuration.ConfigurationManager.AppSettings["DefaultConnection"]));
+        connectionString: connectionString));
 
+builder.Services.AddTransient(typeof(IAsyncRepository<>), typeof(EfRepository<>));
 builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddTransient<IImportService, ImportService>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 
 var app = builder.Build();

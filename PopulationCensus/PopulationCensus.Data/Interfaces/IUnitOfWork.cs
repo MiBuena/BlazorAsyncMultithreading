@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PopulationCensus.Data.Interfaces
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
         IAsyncRepository<Age> AgeRepository { get; }
 

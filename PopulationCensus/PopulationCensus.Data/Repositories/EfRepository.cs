@@ -87,5 +87,10 @@ namespace PopulationCensus.Data.Repositories
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
+
+        public void AddRange(IEnumerable<TEntity> entities)
+        {
+            dbSet.AddRange(entities);
+        }
     }
 }
