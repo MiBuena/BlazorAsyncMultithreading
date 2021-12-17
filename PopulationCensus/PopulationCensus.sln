@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Server", "PopulationCensus\Server\PopulationCensus.Server.csproj", "{F0AC4DC7-A5BD-470C-9711-93F5F7BE4E77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Client", "PopulationCensus\Client\PopulationCensus.Client.csproj", "{D941B09F-E273-4061-B407-A62511B4F476}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopulationCensus.Shared", "PopulationCensus\Shared\PopulationCensus.Shared.csproj", "{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopulationCensus.Data", "PopulationCensus.Data\PopulationCensus.Data.csproj", "{B39414FF-484F-4166-8DA4-3B3388791539}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B4D846B-43B9-4BF2-9F6B-F6A60A2E0DB3}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0AC4DC7-A5BD-470C-9711-93F5F7BE4E77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0AC4DC7-A5BD-470C-9711-93F5F7BE4E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0AC4DC7-A5BD-470C-9711-93F5F7BE4E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0AC4DC7-A5BD-470C-9711-93F5F7BE4E77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D941B09F-E273-4061-B407-A62511B4F476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D941B09F-E273-4061-B407-A62511B4F476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D941B09F-E273-4061-B407-A62511B4F476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D941B09F-E273-4061-B407-A62511B4F476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD427AA-C79A-4A21-AEF5-AC2165B9B818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B39414FF-484F-4166-8DA4-3B3388791539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B39414FF-484F-4166-8DA4-3B3388791539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B39414FF-484F-4166-8DA4-3B3388791539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B39414FF-484F-4166-8DA4-3B3388791539}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8112ADC3-7F18-496F-B608-1E3DCB7EB340}
+	EndGlobalSection
+EndGlobal

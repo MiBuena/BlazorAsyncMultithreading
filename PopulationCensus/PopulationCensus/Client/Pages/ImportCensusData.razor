@@ -1,0 +1,62 @@
+﻿@page "/example-upload"
+
+
+<div class="row px-3">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col p-3">
+                
+               <RadzenCard>
+                    <h4 class="mb-4">Single file upload</h4>
+                    <RadzenUpload Url="upload/single" Progress=@(args => OnProgress(args, "Single file upload")) Class="w-100">
+                    </RadzenUpload>
+                </RadzenCard>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<EventConsole @ref=@console Class="mt-4" />
+*@
+@code {
+    //EventConsole console;
+
+    RadzenUpload upload;
+
+    int progress;
+    string info;
+
+    int customParameter = 1;
+
+    void OnChange(UploadChangeEventArgs args, string name)
+    {
+        //foreach (var file in args.Files)
+        //{
+        //    console.Log($"File: {file.Name} / {file.Size} bytes");
+        //}
+
+        //console.Log($"{name} changed");
+    }
+
+    void OnProgress(UploadProgressArgs args, string name)
+    {
+        //this.info = $"% '{name}' / {args.Loaded} of {args.Total} bytes.";
+        //this.progress = args.Progress;
+
+        //if (args.Progress == 100)
+        //{
+        //    console.Clear();
+
+        //    foreach (var file in args.Files)
+        //    {
+        //        console.Log($"Uploaded: {file.Name} / {file.Size} bytes");
+        //    }
+        //}
+    }
+
+    void OnComplete(UploadCompleteEventArgs args)
+    {
+        //console.Log($"Server response: {args.RawResponse}");
+    }
+}
