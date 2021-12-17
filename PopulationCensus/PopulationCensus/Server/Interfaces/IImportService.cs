@@ -3,5 +3,7 @@
     public interface IImportService
     {
         Task ImportAgeFileAsync(IFormFile file);
+
+        Task ImportAreaFileAsync(IFormFile file);
     }
 }

@@ -27,7 +27,7 @@ namespace PopulationCensus.Server.Services
         {
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                await reader.ReadLineAsync();
+                await reader.ReadLineAsync(); //skip the title row
 
                 var lines = new List<string>();
 
@@ -38,7 +38,7 @@ namespace PopulationCensus.Server.Services
 
                     if (lines.Count == 1000)
                     {
-                        yield return lines;
+                        yield return lines; //Pass only 1000 on 1 batch to be saved to the db
                         lines = new List<string>();
                     }
 

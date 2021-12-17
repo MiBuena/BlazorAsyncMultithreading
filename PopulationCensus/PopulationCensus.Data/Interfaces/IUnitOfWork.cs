@@ -9,8 +9,8 @@ namespace PopulationCensus.Data.Interfaces
 {
     public interface IUnitOfWork
     {
-        IAsyncRepository<Age> AgeRepository { get; }
-
+        IAsyncRepository<Age> AgesRepository { get; }
+        IAsyncRepository<Area> AreasRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

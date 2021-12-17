@@ -16,5 +16,6 @@ namespace PopulationCensus.Data.DB
         }
 
         public DbSet<Age> Ages { get; set; }
+        public DbSet<Area> Areas { get; set; }
     }
 }

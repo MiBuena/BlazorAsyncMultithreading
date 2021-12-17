@@ -27,5 +27,20 @@ namespace PopulationCensus.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("upload/area-file")]
+        public async Task<IActionResult> UploadAreaFile(IFormFile file)
+        {
+            try
+            {
+                await _importService.ImportAreaFileAsync(file);
+
+                return StatusCode(200);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

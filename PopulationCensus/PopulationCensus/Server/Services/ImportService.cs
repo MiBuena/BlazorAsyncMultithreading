@@ -22,7 +22,7 @@ namespace PopulationCensus.Server.Services
             await foreach (var item in fileContent)
             {
                 var extractedAges = ExtractAgeEntities(item);
-                _unitOfWork.AgeRepository.AddRange(extractedAges);
+                _unitOfWork.AgesRepository.AddRange(extractedAges);
                 await _unitOfWork.SaveChangesAsync();
             }
         }
@@ -31,10 +31,41 @@ namespace PopulationCensus.Server.Services
         {
             var collection = new List<Age>();
 
-            foreach (var item2 in lines)
+            foreach (var line in lines)
             {
-                var ageData = item2.Split(',');
+                var ageData = line.Split(',');
                 var ageEntity = new Age()
+                {
+                    Code = ageData[0],
+                    Description = ageData[1],
+                };
+
+                collection.Add(ageEntity);
+            }
+
+            return collection;
+        }
+
+        public async Task ImportAreaFileAsync(IFormFile file)
+        {
+            var fileContent = _fileService.ReadFileInPortionsAsync(file);
+
+            await foreach (var item in fileContent)
+            {
+                var extractedAges = ExtractAreaEntities(item);
+                _unitOfWork.AreasRepository.AddRange(extractedAges);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        private IEnumerable<Area> ExtractAreaEntities(IEnumerable<string> lines)
+        {
+            var collection = new List<Area>();
+
+            foreach (var line in lines)
+            {
+                var ageData = line.Split(',');
+                var ageEntity = new Area()
                 {
                     Code = ageData[0],
                     Description = ageData[1],

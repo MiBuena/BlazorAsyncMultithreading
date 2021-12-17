@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PopulationCensus.Data.DB;
 
@@ -10,9 +11,10 @@ using PopulationCensus.Data.DB;
 namespace PopulationCensus.Data.Migrations
 {
     [DbContext(typeof(PopulationContext))]
-    partial class PopulationContextModelSnapshot : ModelSnapshot
+    [Migration("20211217213835_AddAreasTable")]
+    partial class AddAreasTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
