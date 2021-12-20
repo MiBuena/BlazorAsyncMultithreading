@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PopulationCensus.Data.Entities
 {
-    public class Area : BaseContentEntity
+    public class Ethnicity : BaseContentEntity
     {
     }
 }

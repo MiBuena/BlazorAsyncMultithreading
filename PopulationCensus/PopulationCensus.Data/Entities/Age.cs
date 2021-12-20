@@ -1,9 +1,6 @@
 ﻿namespace PopulationCensus.Data.Entities
 {
-    public class Age : BaseEntity
+    public class Age : BaseContentEntity
     {
-        public string Code { get; set; }
-
-        public string Description { get; set; }
     }
 }

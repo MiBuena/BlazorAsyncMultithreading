@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace PopulationCensus.Data.Entities
 {
-    public class Area : BaseContentEntity
+    public abstract class BaseContentEntity : BaseEntity
     {
+        public string Code { get; set; }
+
+        public string Description { get; set; }
     }
 }
