@@ -5,6 +5,13 @@ namespace PopulationCensus.Server.Services
 {
     public class LocalFileService : IFileService
     {
+        private readonly IStreamReaderWrapper _readerWrapper;
+
+        public LocalFileService(IStreamReaderWrapper reader)
+        {
+            _readerWrapper = reader;
+        }
+
         public async Task<IEnumerable<string>> ReadFileAsync(IFormFile file)
         {
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -25,7 +32,7 @@ namespace PopulationCensus.Server.Services
 
         public async IAsyncEnumerable<IEnumerable<string>> ReadFileInPortionsAsync(IFormFile file)
         {
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var reader = _readerWrapper.GetStreamReader(file))
             {
                 await reader.ReadLineAsync(); //skip the title row
 

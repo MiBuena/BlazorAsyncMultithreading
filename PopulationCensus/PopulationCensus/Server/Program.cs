@@ -26,6 +26,9 @@ builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddTransient<IImportService, ImportService>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddTransient<IStreamReaderWrapper, StreamReaderWrapper>();
+
+
 
 var app = builder.Build();
 

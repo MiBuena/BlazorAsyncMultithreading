@@ -4,31 +4,12 @@ namespace PopulationCensus.Server.Services
 {
     public class StreamReaderWrapper : IStreamReaderWrapper
     {
-        private StreamReader? _reader;
+        private StreamReader _reader;
 
-        public StreamReaderWrapper(IFormFile file)
+        public StreamReader GetStreamReader(IFormFile file)
         {
             _reader = new StreamReader(file.OpenReadStream());
-        }
-
-        public Task<string> ReadLineAsync()
-        {
-            return _reader.ReadLineAsync();
-        }
-        
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _reader?.Dispose();
-                _reader = null;
-            }
-        }
+            return _reader;
+        }       
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace PopulationCensus.Server.Interfaces
 {
-    public interface IStreamReaderWrapper : IDisposable
+    public interface IStreamReaderWrapper
     {
-        Task<string> ReadLineAsync();
+        StreamReader GetStreamReader(IFormFile file);
     }
 }
