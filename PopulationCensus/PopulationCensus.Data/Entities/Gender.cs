@@ -8,5 +8,6 @@ namespace PopulationCensus.Data.Entities
 {
     public class Gender : BaseContentEntity
     {
+        public ICollection<CensusAreaData> Censuses { get; set; } = new List<CensusAreaData>();
     }
 }

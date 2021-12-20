@@ -20,5 +20,35 @@ namespace PopulationCensus.Data.DB
         public DbSet<Ethnicity> Ethnicity { get; set; }
         public DbSet<Gender> Gender { get; set; }
         public DbSet<Year> Year { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<CensusAreaData>()
+                .HasOne(p => p.Year)
+                .WithMany(b => b.Censuses)
+                .HasForeignKey(p => p.YearId);
+
+            builder.Entity<CensusAreaData>()
+                .HasOne(p => p.Age)
+                .WithMany(b => b.Censuses)
+                .HasForeignKey(p => p.AgeId);
+
+            builder.Entity<CensusAreaData>()
+                .HasOne(p => p.Area)
+                .WithMany(b => b.Censuses)
+                .HasForeignKey(p => p.AreaId);
+
+            builder.Entity<CensusAreaData>()
+                .HasOne(p => p.Ethnicity)
+                .WithMany(b => b.Censuses)
+                .HasForeignKey(p => p.EthnicityId);
+
+            builder.Entity<CensusAreaData>()
+                .HasOne(p => p.Gender)
+                .WithMany(b => b.Censuses)
+                .HasForeignKey(p => p.GenderId);
+        }
     }
 }
