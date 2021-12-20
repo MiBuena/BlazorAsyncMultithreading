@@ -42,5 +42,20 @@ namespace PopulationCensus.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("upload/ethnicity-file")]
+        public async Task<IActionResult> UploadEthnicityFile(IFormFile file)
+        {
+            try
+            {
+                await _importService.ImportEthnicityFileAsync(file);
+
+                return StatusCode(200);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

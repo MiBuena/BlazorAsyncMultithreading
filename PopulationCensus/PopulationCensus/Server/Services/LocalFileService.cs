@@ -14,7 +14,7 @@ namespace PopulationCensus.Server.Services
 
         public async Task<IEnumerable<string>> ReadFileAsync(IFormFile file)
         {
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var reader = _readerWrapper.GetStreamReader(file))
             {
                 await reader.ReadLineAsync();
 

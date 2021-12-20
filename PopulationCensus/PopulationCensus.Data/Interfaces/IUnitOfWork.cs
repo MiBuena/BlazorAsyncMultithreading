@@ -11,6 +11,8 @@ namespace PopulationCensus.Data.Interfaces
     {
         IAsyncRepository<Age> AgesRepository { get; }
         IAsyncRepository<Area> AreasRepository { get; }
+        IAsyncRepository<Ethnicity> EthnicitiesRepository { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

@@ -76,5 +76,33 @@ namespace PopulationCensus.Server.Services
 
             return collection;
         }
+
+        public async Task ImportEthnicityFileAsync(IFormFile file)
+        {
+            var fileContent = await _fileService.ReadFileAsync(file);
+
+            var extractedEthnicities = ExtractEthnicityEntities(fileContent);
+            _unitOfWork.EthnicitiesRepository.AddRange(extractedEthnicities);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private IEnumerable<Ethnicity> ExtractEthnicityEntities(IEnumerable<string> lines)
+        {
+            var collection = new List<Ethnicity>();
+
+            foreach (var line in lines)
+            {
+                var ethnicityData = line.Split(',');
+                var ethnicityEntity = new Ethnicity()
+                {
+                    Code = ethnicityData[0],
+                    Description = ethnicityData[1],
+                };
+
+                collection.Add(ethnicityEntity);
+            }
+
+            return collection;
+        }
     }
 }
