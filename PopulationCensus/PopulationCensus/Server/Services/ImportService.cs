@@ -104,5 +104,34 @@ namespace PopulationCensus.Server.Services
 
             return collection;
         }
+
+
+        public async Task ImportGenderFileAsync(IFormFile file)
+        {
+            var fileContent = await _fileService.ReadFileAsync(file);
+
+            var extractedGenderEntities = ExtractGenderEntities(fileContent);
+            _unitOfWork.GenderRepository.AddRange(extractedGenderEntities);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private IEnumerable<Gender> ExtractGenderEntities(IEnumerable<string> lines)
+        {
+            var collection = new List<Gender>();
+
+            foreach (var line in lines)
+            {
+                var ethnicityData = line.Split(',');
+                var ethnicityEntity = new Gender()
+                {
+                    Code = ethnicityData[0],
+                    Description = ethnicityData[1],
+                };
+
+                collection.Add(ethnicityEntity);
+            }
+
+            return collection;
+        }
     }
 }

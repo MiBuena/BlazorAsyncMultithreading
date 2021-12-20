@@ -24,6 +24,12 @@
                     </RadzenUpload>
                 </RadzenCard>
 
+                <RadzenCard>
+                    <h4 class="mb-4">Gender upload</h4>
+                    <RadzenUpload Url="upload/gender-file" Progress=@(args => OnProgress(args, "Single file upload")) Class="w-100">
+                    </RadzenUpload>
+                </RadzenCard>
+
             </div>
         </div>
     </div>
