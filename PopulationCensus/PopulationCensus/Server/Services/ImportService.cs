@@ -111,7 +111,7 @@ namespace PopulationCensus.Server.Services
             var fileContent = await _fileService.ReadFileAsync(file);
 
             var extractedGenderEntities = ExtractGenderEntities(fileContent);
-            _unitOfWork.GenderRepository.AddRange(extractedGenderEntities);
+            _unitOfWork.GendersRepository.AddRange(extractedGenderEntities);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -123,6 +123,35 @@ namespace PopulationCensus.Server.Services
             {
                 var ethnicityData = line.Split(',');
                 var ethnicityEntity = new Gender()
+                {
+                    Code = ethnicityData[0],
+                    Description = ethnicityData[1],
+                };
+
+                collection.Add(ethnicityEntity);
+            }
+
+            return collection;
+        }
+
+
+        public async Task ImportYearsFileAsync(IFormFile file)
+        {
+            var fileContent = await _fileService.ReadFileAsync(file);
+
+            var extractedGenderEntities = ExtractYearEntities(fileContent);
+            _unitOfWork.YearsRepository.AddRange(extractedGenderEntities);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private IEnumerable<Year> ExtractYearEntities(IEnumerable<string> lines)
+        {
+            var collection = new List<Year>();
+
+            foreach (var line in lines)
+            {
+                var ethnicityData = line.Split(',');
+                var ethnicityEntity = new Year()
                 {
                     Code = ethnicityData[0],
                     Description = ethnicityData[1],

@@ -58,13 +58,27 @@ namespace PopulationCensus.Server.Controllers
             }
         }
 
-
         [HttpPost("upload/gender-file")]
         public async Task<IActionResult> UploadGenderFile(IFormFile file)
         {
             try
             {
                 await _importService.ImportGenderFileAsync(file);
+
+                return StatusCode(200);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("upload/year-file")]
+        public async Task<IActionResult> UploadYearFile(IFormFile file)
+        {
+            try
+            {
+                await _importService.ImportYearsFileAsync(file);
 
                 return StatusCode(200);
             }
