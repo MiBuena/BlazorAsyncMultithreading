@@ -1,4 +1,6 @@
-﻿namespace PopulationCensus.Server.Interfaces
+﻿using System.Runtime.CompilerServices;
+
+namespace PopulationCensus.Server.Interfaces
 {
     public interface IFileService
     {
@@ -6,6 +8,12 @@
 
         IAsyncEnumerable<IEnumerable<string>> ReadFileInPortionsAsync(IFormFile file);
 
-        Task<IEnumerable<string>> ReadFileAllLines(IFormFile file);
+        Task<IEnumerable<string>> ReadFileAllLines(string path);
+
+        IAsyncEnumerable<string> ReadFileAsStream([EnumeratorCancellation] CancellationToken cancellationToken = default);
+
+        Task<LinkedList<string>> ReadLargeFileWithBufferRead(string path);
+
+        Task<List<string>> ReadLargeFileWithBufferReadList(string path);
     }
 }

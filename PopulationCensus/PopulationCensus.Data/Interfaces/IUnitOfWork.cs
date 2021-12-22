@@ -14,6 +14,7 @@ namespace PopulationCensus.Data.Interfaces
         IAsyncRepository<Ethnicity> EthnicitiesRepository { get; }
         IAsyncRepository<Gender> GendersRepository { get; }
         IAsyncRepository<Year> YearsRepository { get; }
+        IAsyncRepository<CensusAreaData> CensusAreaDataRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

@@ -87,5 +87,23 @@ namespace PopulationCensus.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("upload/1")]
+        public async Task<IActionResult> UploadLargeFile([FromBody] string values)
+        {
+            return StatusCode(200);
+        }
+
+        [HttpGet("upload/4")]
+        public async Task<IActionResult> UploadCensusDataFile()
+        {
+            await _importService.ImportCensusDataFileAsync();
+            return StatusCode(200);
+        }
+    }
+
+    public class A
+    {
+        public List<string> B { get; set; }
     }
 }

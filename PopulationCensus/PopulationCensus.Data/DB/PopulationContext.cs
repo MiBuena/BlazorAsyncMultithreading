@@ -20,6 +20,7 @@ namespace PopulationCensus.Data.DB
         public DbSet<Ethnicity> Ethnicity { get; set; }
         public DbSet<Gender> Gender { get; set; }
         public DbSet<Year> Year { get; set; }
+        public DbSet<CensusAreaData> CensusAreasData { get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

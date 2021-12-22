@@ -1,5 +1,6 @@
 ﻿using PopulationCensus.Server.Interfaces;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace PopulationCensus.Server.Services
 {
@@ -10,19 +11,6 @@ namespace PopulationCensus.Server.Services
         public LocalFileService(IStreamReaderWrapper reader)
         {
             _readerWrapper = reader;
-        }
-
-        public async Task<IEnumerable<string>> ReadFileAllLines(IFormFile file)
-        {
-            string? lines;
-            using (var reader = _readerWrapper.GetStreamReader(file))
-            {
-                await reader.ReadLineAsync();
-
-                lines = await reader.ReadToEndAsync();
-            }
-
-            return lines.Split("\r\n");
         }
 
         public async Task<IEnumerable<string>> ReadFileAsync(IFormFile file)
@@ -66,6 +54,86 @@ namespace PopulationCensus.Server.Services
 
                 yield return lines;
             }
+        }
+
+        public async IAsyncEnumerable<string> ReadFileAsStream([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            using(var reader = _readerWrapper.GetStreamReader("Files/Data8277.csv"))
+            {
+                await reader.ReadLineAsync();
+
+                string? line;
+                while((line = await reader.ReadLineAsync()) != null)
+                {
+                    if(cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    yield return line;
+                }
+            }
+        }
+
+        public async Task<IEnumerable<string>> ReadFileAllLines(string path)
+        {
+            string? lines;
+            using (var reader = _readerWrapper.GetStreamReader(path))
+            {
+                await reader.ReadLineAsync();
+
+                lines = await reader.ReadToEndAsync();
+            }
+
+            return lines.Split("\r\n");
+        }
+
+        public async Task<LinkedList<string>> ReadLargeFileWithBufferRead(string path)
+        {
+            var lines = new LinkedList<string>();
+
+            using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (BufferedStream bs = new BufferedStream(fs))
+                {
+                    using (StreamReader sr = new StreamReader(bs))
+                    {
+                        await sr.ReadLineAsync();
+
+                        string? line;
+                        while ((line = await sr.ReadLineAsync()) != null)
+                        {
+                            lines.AddLast(line);
+                        }
+                    }
+                }
+            }
+
+            return lines;
+        }
+
+        public async Task<List<string>> ReadLargeFileWithBufferReadList(string path)
+        {
+            var lines = new List<string>();
+
+            using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (BufferedStream bs = new BufferedStream(fs))
+                {
+                    using (StreamReader sr = new StreamReader(bs))
+                    {
+                        await sr.ReadLineAsync();
+
+                        string? line;
+                        while ((line = await sr.ReadLineAsync()) != null)
+                        {
+                            lines.Add(line);
+                        }
+                    }
+                }
+            }
+
+            return lines;
         }
     }
 }

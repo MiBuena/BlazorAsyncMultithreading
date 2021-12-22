@@ -7,5 +7,6 @@
         Task ImportEthnicityFileAsync(IFormFile file);
         Task ImportGenderFileAsync(IFormFile file);
         Task ImportYearsFileAsync(IFormFile file);
+        Task ImportCensusDataFileAsync();
     }
 }

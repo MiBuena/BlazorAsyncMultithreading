@@ -10,6 +10,12 @@ namespace PopulationCensus.Server.Services
         {
             _reader = new StreamReader(file.OpenReadStream());
             return _reader;
-        }       
+        }
+
+        public StreamReader GetStreamReader(string path)
+        {
+            _reader = new StreamReader(path);
+            return _reader;
+        }
     }
 }

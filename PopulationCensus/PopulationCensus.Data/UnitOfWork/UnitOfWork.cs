@@ -17,13 +17,15 @@ namespace PopulationCensus.Data.UnitOfWork
         private readonly IAsyncRepository<Ethnicity> _ethnicitiesRepository;
         private readonly IAsyncRepository<Gender> _gendersRepository;
         private readonly IAsyncRepository<Year> _yearsRepository;
+        private readonly IAsyncRepository<CensusAreaData> _censusDataRepository;
 
         public UnitOfWork(PopulationContext context,
             IAsyncRepository<Age> agesRepository,
             IAsyncRepository<Area> areasRepository,
             IAsyncRepository<Ethnicity> ethnicitiesRepository,
             IAsyncRepository<Gender> gendersRepository,
-            IAsyncRepository<Year> yearsRepository)
+            IAsyncRepository<Year> yearsRepository,
+            IAsyncRepository<CensusAreaData> censusAreaDataRepository)
         {
             _context = context;
             _agesRepository = agesRepository;
@@ -31,6 +33,7 @@ namespace PopulationCensus.Data.UnitOfWork
             _ethnicitiesRepository = ethnicitiesRepository;
             _gendersRepository = gendersRepository;
             _yearsRepository = yearsRepository;
+            _censusDataRepository = censusAreaDataRepository;
         }
 
         public IAsyncRepository<Age> AgesRepository => this._agesRepository;
@@ -42,6 +45,8 @@ namespace PopulationCensus.Data.UnitOfWork
         public IAsyncRepository<Gender> GendersRepository => this._gendersRepository;
 
         public IAsyncRepository<Year> YearsRepository => this._yearsRepository;
+
+        public IAsyncRepository<CensusAreaData> CensusAreaDataRepository => this._censusDataRepository;
 
         public Task<int> SaveChangesAsync() => this._context.SaveChangesAsync();
     }
