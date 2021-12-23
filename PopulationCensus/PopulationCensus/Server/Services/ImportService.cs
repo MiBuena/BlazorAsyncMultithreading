@@ -1,6 +1,8 @@
-﻿using PopulationCensus.Data.Entities;
+﻿using Microsoft.Data.SqlClient;
+using PopulationCensus.Data.Entities;
 using PopulationCensus.Data.Interfaces;
 using PopulationCensus.Server.Interfaces;
+using System.Data;
 using System.Diagnostics;
 
 namespace PopulationCensus.Server.Services
@@ -166,13 +168,11 @@ namespace PopulationCensus.Server.Services
 
         public async Task ImportCensusDataFileAsync()
         {
+
             Stopwatch a = Stopwatch.StartNew();
             a.Start();
 
             var fileContent = await _fileService.ReadLargeFileWithBufferRead("Files/Data8277.csv");
-
-            TimeSpan timeTaken = a.Elapsed;
-
 
             var years = await _unitOfWork.YearsRepository.GetListAsync();
             var ages = await _unitOfWork.AgesRepository.GetListAsync();
@@ -190,17 +190,155 @@ namespace PopulationCensus.Server.Services
             var censusEntities = fileContent.AsParallel().AsOrdered()
                 .Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary))
                 .ToList();
-            
+
+            TimeSpan timeTaken = a.Elapsed;
+
+            A(censusEntities);
+
+
             TimeSpan timeTaken4 = a.Elapsed;
 
             //_unitOfWork.CensusAreaDataRepository.AddRange(censusEntities);
             //await _unitOfWork.SaveChangesAsync();
 
-            TimeSpan timeTaken8 = a.Elapsed;
+            //TimeSpan timeTaken8 = a.Elapsed;
         }
 
-        private CensusAreaData ExtractCensusDataEntity(string line, IDictionary<string, Year> years, 
-            IDictionary<string, Age> ages, IDictionary<string, Ethnicity> ethnicities, 
+        public void A(IEnumerable<CensusAreaData> inputCollection)
+        {
+            string connectionString = GetConnectionString();
+            // Open a connection to the AdventureWorks database.
+            using (SqlConnection connection =
+                       new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Perform an initial count on the destination table.
+                SqlCommand commandRowCount = new SqlCommand(
+                    "SELECT COUNT(*) FROM " +
+                    "dbo.CensusAreaData;",
+                    connection);
+                long countStart = System.Convert.ToInt32(
+                    commandRowCount.ExecuteScalar());
+                Console.WriteLine("Starting row count = {0}", countStart);
+
+                // Create a table with some rows.
+                DataTable newProducts = MakeTable(inputCollection);
+
+                // Create the SqlBulkCopy object.
+                // Note that the column positions in the source DataTable
+                // match the column positions in the destination table so
+                // there is no need to map columns.
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                {
+                    bulkCopy.DestinationTableName =
+                        "dbo.CensusAreaData";
+
+                    try
+                    {
+                        bulkCopy.BulkCopyTimeout = 10000;
+                        // Write from the source to the destination.
+                        bulkCopy.WriteToServer(newProducts);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+                // Perform a final count on the destination
+                // table to see how many rows were added.
+                long countEnd = System.Convert.ToInt32(
+                    commandRowCount.ExecuteScalar());
+                Console.WriteLine("Ending row count = {0}", countEnd);
+                Console.WriteLine("{0} rows were added.", countEnd - countStart);
+                Console.WriteLine("Press Enter to finish.");
+                Console.ReadLine();
+            }
+        }
+
+        private static DataTable MakeTable(IEnumerable<CensusAreaData> inputData)
+        // Create a new DataTable named NewProducts.
+        {
+            DataTable newProducts = new DataTable("NewCensusData");
+
+            // Add three column objects to the table.
+            DataColumn id = new DataColumn();
+            id.DataType = System.Type.GetType("System.Int32");
+            id.ColumnName = "ID";
+            id.AutoIncrement = true;
+            newProducts.Columns.Add(id);
+
+            DataColumn yearId = new DataColumn();
+            yearId.DataType = System.Type.GetType("System.Int32");
+            yearId.ColumnName = "YearID";
+            newProducts.Columns.Add(yearId);
+
+            DataColumn ageId = new DataColumn();
+            ageId.DataType = System.Type.GetType("System.Int32");
+            ageId.ColumnName = "AgeID";
+            newProducts.Columns.Add(ageId);
+
+            DataColumn ethnicityId = new DataColumn();
+            ethnicityId.DataType = System.Type.GetType("System.Int32");
+            ethnicityId.ColumnName = "EthnicityID";
+            newProducts.Columns.Add(ethnicityId);
+
+            DataColumn genderId = new DataColumn();
+            genderId.DataType = System.Type.GetType("System.Int32");
+            genderId.ColumnName = "GenderID";
+            newProducts.Columns.Add(genderId);
+
+            DataColumn areaId = new DataColumn();
+            areaId.DataType = System.Type.GetType("System.Int32");
+            areaId.ColumnName = "AreaID";
+            newProducts.Columns.Add(areaId);
+
+            DataColumn count = new DataColumn();
+            count.DataType = System.Type.GetType("System.Int32");
+            count.ColumnName = "count";
+            newProducts.Columns.Add(count);
+
+
+            // Create an array for DataColumn objects.
+            DataColumn[] keys = new DataColumn[1];
+            keys[0] = id;
+            newProducts.PrimaryKey = keys;
+
+
+            foreach (var item in inputData)
+            {
+                DataRow row = newProducts.NewRow();
+                row["YearID"] = item.YearId;
+                row["AgeID"] = item.AgeId;
+                row["EthnicityID"] = item.EthnicityId;
+                row["GenderID"] = item.GenderId;
+                row["AreaID"] = item.AreaId;
+                row["count"] = item.Count;
+                newProducts.Rows.Add(row);
+
+            }
+
+            newProducts.AcceptChanges();
+ 
+            // Return the new DataTable.
+            return newProducts;
+        }
+
+        private void AddRow()
+        {
+
+        }
+
+        private static string GetConnectionString()
+        // To avoid storing the connection string in your code,
+        // you can retrieve it from a configuration file.
+        {
+            return "Server=DESKTOP-HCHKBF5\\SQLEXPRESS;Database=PopulationCensusContext;Trusted_Connection=True;MultipleActiveResultSets=true";
+        }
+
+        private CensusAreaData ExtractCensusDataEntity(string line, IDictionary<string, Year> years,
+            IDictionary<string, Age> ages, IDictionary<string, Ethnicity> ethnicities,
             IDictionary<string, Gender> genders, IDictionary<string, Area> areas)
         {
             var ethnicityData = line.Split(',');
@@ -213,7 +351,7 @@ namespace PopulationCensus.Server.Services
 
             int count = 0;
             int.TryParse(ethnicityData[5], out count);
-            
+
             var ethnicityEntity = new CensusAreaData()
             {
                 YearId = year.Id,
@@ -255,5 +393,7 @@ namespace PopulationCensus.Server.Services
 
             return collection;
         }
+
+
     }
 }
