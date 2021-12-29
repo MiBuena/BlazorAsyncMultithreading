@@ -3,12 +3,18 @@
 
 <h3>CancellingTasks</h3>
 
+<br />
 
+<div style="border-style: solid; padding: 50px; height: 190px;">
+    
+<div><span>Cancelling a simple delay task</span></div>
 
-<button @onclick="@StartButton_Click" disabled="@IsStartButtonDisabled">Start</button>
+<br />
 
-<button @onclick="@CancelButton_Click" disabled="@IsCancelButtonDisabled">Cancel</button>
+<button @onclick="@StartButton_Click" disabled="@IsStartButtonDisabled_SimpleDelayTask">Start</button>
 
-<div>@Message</div>
+<button @onclick="@CancelButton_Click" disabled="@IsCancelButtonDisabled_SimpleDelayTask">Cancel</button>
 
+<div>@MessageSimpleDelayTask</div>
 
+</div>

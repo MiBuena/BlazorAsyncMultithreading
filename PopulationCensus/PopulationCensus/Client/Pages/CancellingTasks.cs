@@ -7,53 +7,63 @@ namespace PopulationCensus.Client.Pages
         [Inject]
         private HttpClient _httpClient { get; set; }
 
-        public bool IsStartButtonDisabled { get; set; } = false;
-
-        public bool IsCancelButtonDisabled { get; set; } = true;
-
-        public string Message { get; set; }
 
 
-        private CancellationTokenSource _cts;
+        public bool IsStartButtonDisabled_SimpleDelayTask { get; set; } = false;
+        public bool IsCancelButtonDisabled_SimpleDelayTask { get; set; } = true;
+        public string MessageSimpleDelayTask { get; set; }
 
+        private CancellationTokenSource _ctsDelayTask;
+
+
+        #region Cancel a simple task
 
         public async void StartButton_Click()
         {
-            IsStartButtonDisabled = true;
-            IsCancelButtonDisabled = false;
-            Message = null;
+            IsStartButtonDisabled_SimpleDelayTask = true;
+            IsCancelButtonDisabled_SimpleDelayTask = false;
+            MessageSimpleDelayTask = null;
 
             try
             {
-                _cts = new CancellationTokenSource();
-                CancellationToken token = _cts.Token;
+                _ctsDelayTask = new CancellationTokenSource();
+                CancellationToken token = _ctsDelayTask.Token;
 
                 await Task.Delay(TimeSpan.FromSeconds(5), token);
-                Message = "Task completed successfully.";
+                MessageSimpleDelayTask = "Task completed successfully.";
             }
             catch (OperationCanceledException ex)
             {
-                Message = "Task was cancelled.";
+                MessageSimpleDelayTask = "Task was cancelled.";
             }
             catch (Exception ex)
             {
-                Message = "Task completed with error.";
+                MessageSimpleDelayTask = "Task completed with error.";
                 throw;
             }
             finally
             {
-                IsStartButtonDisabled = false;
-                IsCancelButtonDisabled = true;
+                IsStartButtonDisabled_SimpleDelayTask = false;
+                IsCancelButtonDisabled_SimpleDelayTask = true;
                 StateHasChanged();
             }
-
-            //var result = await ReadFileAsync("Files/First38lines.csv");
         }
         public void CancelButton_Click()
         {
-            _cts.Cancel();
-            IsCancelButtonDisabled = true;
+            _ctsDelayTask.Cancel();
+            IsCancelButtonDisabled_SimpleDelayTask = true;
         }
+
+        #endregion
+
+
+
+        #region Cancel a simple task
+        public async void ReadFile()
+        {
+            var a = await File.ReadAllLinesAsync("Files/Data8277Half.csv");
+        }
+        #endregion
 
 
         public async Task<LinkedList<string>> ReadFileAsync(string path)
