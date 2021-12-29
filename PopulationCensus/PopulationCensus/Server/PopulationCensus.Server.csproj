@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FilesToImport\**" />
+    <Content Remove="FilesToImport\**" />
+    <EmbeddedResource Remove="FilesToImport\**" />
+    <None Remove="FilesToImport\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -19,10 +26,6 @@
     <ProjectReference Include="..\..\PopulationCensus.Data\PopulationCensus.Data.csproj" />
     <ProjectReference Include="..\Client\PopulationCensus.Client.csproj" />
     <ProjectReference Include="..\Shared\PopulationCensus.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FilesToImport\" />
   </ItemGroup>
 
   <ItemGroup>
