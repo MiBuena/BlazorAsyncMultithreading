@@ -100,6 +100,13 @@ namespace PopulationCensus.Server.Controllers
             await _importService.ImportCensusDataFileAsync();
             return StatusCode(200);
         }
+
+        [HttpGet("upload/long-api-call")]
+        public IActionResult LongApiCall()
+        {
+            Task.Delay(10000);
+            return StatusCode(200);
+        }
     }
 
     public class A
