@@ -3,5 +3,12 @@
 
 <h3>CancellingTasks</h3>
 
-<button @onclick="@UploadLargeFile">Upload local file</button>
+
+
+<button @onclick="@StartButton_Click" disabled="@IsStartButtonDisabled">Start</button>
+
+<button @onclick="@CancelButton_Click" disabled="@IsCancelButtonDisabled">Cancel</button>
+
+<div>@Message</div>
+
 

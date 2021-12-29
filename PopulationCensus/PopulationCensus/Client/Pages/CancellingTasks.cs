@@ -7,20 +7,63 @@ namespace PopulationCensus.Client.Pages
         [Inject]
         private HttpClient _httpClient { get; set; }
 
-        public async void UploadLargeFile()
+        public bool IsStartButtonDisabled { get; set; } = false;
+
+        public bool IsCancelButtonDisabled { get; set; } = true;
+
+        public string Message { get; set; }
+
+
+        private CancellationTokenSource _cts;
+
+
+        public async void StartButton_Click()
         {
-            await ReadLargeFileAsync("Files/First10lines.csv");
+            IsStartButtonDisabled = true;
+            IsCancelButtonDisabled = false;
+            Message = null;
+
+            try
+            {
+                _cts = new CancellationTokenSource();
+                CancellationToken token = _cts.Token;
+
+                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                Message = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                Message = "Task was cancelled.";
+            }
+            catch (Exception ex)
+            {
+                Message = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                IsStartButtonDisabled = false;
+                IsCancelButtonDisabled = true;
+                StateHasChanged();
+            }
+
+            //var result = await ReadFileAsync("Files/First38lines.csv");
+        }
+        public void CancelButton_Click()
+        {
+            _cts.Cancel();
+            IsCancelButtonDisabled = true;
         }
 
 
-        public async Task<LinkedList<string>> ReadLargeFileAsync(string path)
+        public async Task<LinkedList<string>> ReadFileAsync(string path)
         {
             var lines = new LinkedList<string>();
 
             using (var stream = await _httpClient.GetStreamAsync(path))
             {
                 using (BufferedStream bs = new BufferedStream(stream))
-                { 
+                {
                     using (StreamReader sr = new StreamReader(bs))
                     {
                         await sr.ReadLineAsync();
