@@ -8,6 +8,7 @@ namespace PopulationCensus.Client.Pages
         private HttpClient _httpClient { get; set; }
 
 
+        #region Cancel a simple task
 
         public bool IsStartButtonDisabled_SimpleDelayTask { get; set; } = false;
         public bool IsCancelButtonDisabled_SimpleDelayTask { get; set; } = true;
@@ -15,10 +16,7 @@ namespace PopulationCensus.Client.Pages
 
         private CancellationTokenSource _ctsDelayTask;
 
-
-        #region Cancel a simple task
-
-        public async void StartButton_Click()
+        public async void StartButton_SimpleDelayTask_Click()
         {
             IsStartButtonDisabled_SimpleDelayTask = true;
             IsCancelButtonDisabled_SimpleDelayTask = false;
@@ -48,7 +46,7 @@ namespace PopulationCensus.Client.Pages
                 StateHasChanged();
             }
         }
-        public void CancelButton_Click()
+        public void CancelButton_SimpleDelayTask_Click()
         {
             _ctsDelayTask.Cancel();
             IsCancelButtonDisabled_SimpleDelayTask = true;
@@ -56,13 +54,56 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
+        #region Cancel a long Http operation
+        public bool IsStartButtonDisabled_LongHttpRequest { get; set; } = false;
+        public bool IsCancelButtonDisabled_LongHttpRequest { get; set; } = true;
+        public string MessageLongHttpRequest { get; set; }
+
+        private CancellationTokenSource _ctsLongHttpRequest;
 
 
-        #region Cancel a simple task
-        public async void ReadFile()
+        public async void StartButton_LongHttpRequest_Click()
         {
-            var a = await File.ReadAllLinesAsync("Files/Data8277Half.csv");
+            IsStartButtonDisabled_LongHttpRequest = true;
+            IsCancelButtonDisabled_LongHttpRequest = false;
+            MessageLongHttpRequest = null;
+
+            try
+            {
+                _ctsLongHttpRequest = new CancellationTokenSource();
+                CancellationToken token = _ctsLongHttpRequest.Token;
+
+                using (var httpResponse = await _httpClient.GetAsync("upload/long-api-call", token))
+                {
+                    var content = await httpResponse.Content.ReadAsStringAsync();
+                }
+
+                MessageLongHttpRequest = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageLongHttpRequest = "Task was cancelled.";
+
+            }
+            catch (Exception ex)
+            {
+                MessageLongHttpRequest = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                IsStartButtonDisabled_LongHttpRequest = false;
+                IsCancelButtonDisabled_LongHttpRequest = true;
+                StateHasChanged();
+            }
         }
+
+        public void CancelButton_LongHttpRequest_Click()
+        {
+            _ctsLongHttpRequest.Cancel();
+            IsCancelButtonDisabled_LongHttpRequest = true;
+        }
+
         #endregion
 
 

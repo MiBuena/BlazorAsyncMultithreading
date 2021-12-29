@@ -102,9 +102,16 @@ namespace PopulationCensus.Server.Controllers
         }
 
         [HttpGet("upload/long-api-call")]
-        public IActionResult LongApiCall()
+        public async Task<IActionResult> LongApiCall(CancellationToken token)
         {
-            Task.Delay(10000);
+            for (var i = 0; i < 10; i++)
+            {
+                token.ThrowIfCancellationRequested();
+
+                System.Diagnostics.Debug.WriteLine(i);                // slow non-cancellable work
+                await Task.Delay(1000);
+            }
+
             return StatusCode(200);
         }
     }
