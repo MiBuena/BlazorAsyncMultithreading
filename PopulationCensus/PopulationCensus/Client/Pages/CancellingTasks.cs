@@ -41,6 +41,7 @@ namespace PopulationCensus.Client.Pages
             }
             finally
             {
+                _ctsDelayTask.Dispose();
                 IsStartButtonDisabled_SimpleDelayTask = false;
                 IsCancelButtonDisabled_SimpleDelayTask = true;
                 StateHasChanged();
