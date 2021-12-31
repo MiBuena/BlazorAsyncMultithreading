@@ -108,7 +108,7 @@ namespace PopulationCensus.Server.Controllers
             {
                 token.ThrowIfCancellationRequested();
 
-                System.Diagnostics.Debug.WriteLine(i);                // slow non-cancellable work
+                System.Diagnostics.Debug.WriteLine(i);
                 await Task.Delay(1000);
             }
 

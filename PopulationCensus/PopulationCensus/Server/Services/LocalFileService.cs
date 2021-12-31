@@ -112,6 +112,36 @@ namespace PopulationCensus.Server.Services
             return lines;
         }
 
+        public async IAsyncEnumerable<LinkedList<string>> ReadLargeFileWithBufferReadInPortions(string path)
+        {
+            var lines = new LinkedList<string>();
+
+            using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (BufferedStream bs = new BufferedStream(fs))
+                {
+                    using (StreamReader sr = new StreamReader(bs))
+                    {
+                        await sr.ReadLineAsync();
+
+                        string? line;
+                        while ((line = await sr.ReadLineAsync()) != null)
+                        {
+                            lines.AddLast(line);
+
+                            if (lines.Count == 1000)
+                            {
+                                yield return lines;
+                                lines = new LinkedList<string>();
+                            }
+                        }
+                    }
+                }
+            }
+
+            yield return lines;
+        }
+
         public async Task<List<string>> ReadLargeFileWithBufferReadList(string path)
         {
             var lines = new List<string>();
