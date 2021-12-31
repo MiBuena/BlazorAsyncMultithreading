@@ -42,6 +42,8 @@ namespace PopulationCensus.Client.Pages
             finally
             {
                 _ctsDelayTask.Dispose();
+                _ctsDelayTask = null;
+
                 IsStartButtonDisabled_SimpleDelayTask = false;
                 IsCancelButtonDisabled_SimpleDelayTask = true;
                 StateHasChanged();
@@ -93,6 +95,9 @@ namespace PopulationCensus.Client.Pages
             }
             finally
             {
+                _ctsLongHttpRequest.Dispose();
+                _ctsLongHttpRequest = null;
+
                 IsStartButtonDisabled_LongHttpRequest = false;
                 IsCancelButtonDisabled_LongHttpRequest = true;
                 StateHasChanged();
