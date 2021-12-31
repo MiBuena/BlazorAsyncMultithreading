@@ -27,11 +27,15 @@ namespace PopulationCensus.Data.Repositories
         public virtual async Task<IEnumerable<TEntity>> GetListAsync(
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, 
+            int skip = 0,
+            int take = int.MaxValue)
         {
-            var query = ApplyCommonManipulations(filter, orderBy);
+            var query = ApplyCommonManipulations(filter, orderBy, skip);
 
-            return await query.ToListAsync(cancellationToken);
+            return await query
+                .Take(take)
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(
@@ -45,7 +49,9 @@ namespace PopulationCensus.Data.Repositories
         }
 
         private IQueryable<TEntity> ApplyCommonManipulations(Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
+            Func<IQueryable<TEntity>, 
+                IOrderedQueryable<TEntity>>? orderBy = null,
+            int skip = 0)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -57,6 +63,11 @@ namespace PopulationCensus.Data.Repositories
             if (orderBy != null)
             {
                 query = orderBy(query);
+            }
+
+            if(skip != 0)
+            {
+                query = query.Skip(skip);
             }
 
             return query;

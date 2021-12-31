@@ -12,7 +12,9 @@ namespace PopulationCensus.Data.Interfaces
         Task<IEnumerable<TEntity>> GetListAsync(
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            int skip = 0,
+            int take = int.MaxValue);
 
         Task<TEntity> FirstOrDefaultAsync(
             Expression<Func<TEntity, bool>>? filter = null,

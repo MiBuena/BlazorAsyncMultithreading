@@ -24,6 +24,7 @@ builder.Services.AddDbContext<PopulationContext>(options =>
 builder.Services.AddTransient(typeof(IAsyncRepository<>), typeof(EfRepository<>));
 builder.Services.AddTransient<IFileService, LocalFileService>();
 builder.Services.AddTransient<IImportService, ImportService>();
+builder.Services.AddTransient<ICensusDataService, CensusDataService>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddTransient<IStreamReaderWrapper, StreamReaderWrapper>();

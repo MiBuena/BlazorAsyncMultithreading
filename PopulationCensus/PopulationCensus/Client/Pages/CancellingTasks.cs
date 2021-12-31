@@ -112,6 +112,61 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
+        #region Cancel a long DB call
+
+        public bool IsStartButtonDisabled_LongDBRequest { get; set; } = false;
+        public bool IsCancelButtonDisabled_LongDBRequest { get; set; } = true;
+        public string MessageLongDBRequest { get; set; }
+
+        private CancellationTokenSource _ctsLongDBRequest;
+        
+        public async void StartButton_LongDBRequest_Click()
+        {
+            IsStartButtonDisabled_LongDBRequest = true;
+            IsCancelButtonDisabled_LongDBRequest = false;
+            MessageLongDBRequest = null;
+
+            try
+            {
+                _ctsLongDBRequest = new CancellationTokenSource();
+                CancellationToken token = _ctsLongDBRequest.Token;
+
+                using (var httpResponse = await _httpClient.GetAsync("census-data/all", token))
+                {
+                    var content = await httpResponse.Content.ReadAsStringAsync();
+                }
+
+                MessageLongDBRequest = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageLongDBRequest = "Task was cancelled.";
+
+            }
+            catch (Exception ex)
+            {
+                MessageLongDBRequest = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                _ctsLongDBRequest.Dispose();
+                _ctsLongDBRequest = null;
+
+                IsStartButtonDisabled_LongDBRequest = false;
+                IsCancelButtonDisabled_LongDBRequest = true;
+                StateHasChanged();
+            }
+
+        }
+
+        public void CancelButton_LongDBRequest_Click()
+        {
+            _ctsLongDBRequest.Cancel();
+            IsCancelButtonDisabled_LongDBRequest = true;
+        }
+
+        #endregion
 
         public async Task<LinkedList<string>> ReadFileAsync(string path)
         {
