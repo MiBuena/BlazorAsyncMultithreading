@@ -168,7 +168,6 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
-
         #region Cancel a long http operation delay
 
         public bool IsStartButtonDisabled_LongHTTPRequestDelay { get; set; } = false;
@@ -225,6 +224,64 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
+
+
+        #region Cancel after a certain period of time
+
+        public bool IsStartButtonDisabled_TimeOut { get; set; } = false;
+        public bool IsCancelButtonDisabled_TimeOut { get; set; } = true;
+        public string MessageTimeOut { get; set; }
+
+        private CancellationTokenSource _ctsTimeOut;
+
+        public async void StartButton_TimeOut_Click()
+        {
+            IsStartButtonDisabled_TimeOut = true;
+            IsCancelButtonDisabled_TimeOut = false;
+            MessageTimeOut = null;
+
+            try
+            {
+                _ctsTimeOut = new CancellationTokenSource();
+                _ctsTimeOut.CancelAfter(TimeSpan.FromSeconds(5));
+                CancellationToken token = _ctsTimeOut.Token;
+
+                using (var httpResponse = await _httpClient.GetAsync("upload/long-api-call-delay", token))
+                {
+                    var content = await httpResponse.Content.ReadAsStringAsync();
+                }
+
+                MessageTimeOut = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageTimeOut = "Task was cancelled.";
+
+            }
+            catch (Exception ex)
+            {
+                MessageTimeOut = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                _ctsTimeOut.Dispose();
+                _ctsTimeOut = null;
+
+                IsStartButtonDisabled_TimeOut = false;
+                IsCancelButtonDisabled_TimeOut = true;
+                StateHasChanged();
+            }
+
+        }
+
+        public void CancelButton_TimeOut_Click()
+        {
+            _ctsTimeOut.Cancel();
+            IsCancelButtonDisabled_TimeOut = true;
+        }
+
+        #endregion
 
         public async Task<LinkedList<string>> ReadFileAsync(string path)
         {

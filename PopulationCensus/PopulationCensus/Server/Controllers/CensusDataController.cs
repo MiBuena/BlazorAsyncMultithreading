@@ -13,7 +13,7 @@ namespace PopulationCensus.Server.Controllers
         }
 
         [HttpGet("census-data/all")]
-        public async Task<IActionResult> GetAllCensusData(CancellationToken token)
+        public async Task<IActionResult> GetAllCensusData(CancellationToken token = default(CancellationToken))
         {
             var a = await _censusDataService.GetAllDataAsync(token);
 

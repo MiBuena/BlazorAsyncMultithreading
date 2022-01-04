@@ -102,7 +102,7 @@ namespace PopulationCensus.Server.Controllers
         }
 
         [HttpGet("upload/long-api-call")]
-        public async Task<IActionResult> LongApiCall(CancellationToken token)
+        public async Task<IActionResult> LongApiCall(CancellationToken token = default(CancellationToken))
         {
             for (var i = 0; i < 10; i++)
             {
@@ -116,7 +116,7 @@ namespace PopulationCensus.Server.Controllers
         }
 
         [HttpGet("upload/long-api-call-delay")]
-        public async Task<IActionResult> LongApiCallDelay(CancellationToken token)
+        public async Task<IActionResult> LongApiCallDelay(CancellationToken token = default(CancellationToken))
         {
             await Task.Delay(10000, token);
 

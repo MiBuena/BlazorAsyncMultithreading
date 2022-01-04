@@ -72,3 +72,21 @@
 <div>@MessageLongHTTPRequestDelay</div>
 
 </div>
+
+<br />
+<br />
+<br />
+
+<div style="border-style: solid; padding: 50px; height: 190px;">
+    
+<div><span>Cancel after a certain period of time</span></div>
+
+<br />
+
+<button @onclick="@StartButton_TimeOut_Click" disabled="@IsStartButtonDisabled_TimeOut">Start</button>
+
+<button @onclick="@CancelButton_TimeOut_Click" disabled="@IsCancelButtonDisabled_TimeOut">Cancel</button>
+
+<div>@MessageTimeOut</div>
+
+</div>
