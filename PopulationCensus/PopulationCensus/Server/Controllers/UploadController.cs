@@ -114,10 +114,13 @@ namespace PopulationCensus.Server.Controllers
 
             return StatusCode(200);
         }
-    }
 
-    public class A
-    {
-        public List<string> B { get; set; }
+        [HttpGet("upload/long-api-call-delay")]
+        public async Task<IActionResult> LongApiCallDelay(CancellationToken token)
+        {
+            await Task.Delay(10000, token);
+
+            return StatusCode(200);
+        }
     }
 }

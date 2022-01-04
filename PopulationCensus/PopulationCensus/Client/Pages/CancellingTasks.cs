@@ -168,6 +168,64 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
+
+        #region Cancel a long http operation delay
+
+        public bool IsStartButtonDisabled_LongHTTPRequestDelay { get; set; } = false;
+        public bool IsCancelButtonDisabled_LongHTTPRequestDelay { get; set; } = true;
+        public string MessageLongHTTPRequestDelay { get; set; }
+
+        private CancellationTokenSource _ctsLongHTTPRequestDelay;
+
+        public async void StartButton_LongHTTPRequestDelay_Click()
+        {
+            IsStartButtonDisabled_LongHTTPRequestDelay = true;
+            IsCancelButtonDisabled_LongHTTPRequestDelay = false;
+            MessageLongHTTPRequestDelay = null;
+
+            try
+            {
+                _ctsLongHTTPRequestDelay = new CancellationTokenSource();
+                CancellationToken token = _ctsLongHTTPRequestDelay.Token;
+
+                using (var httpResponse = await _httpClient.GetAsync("upload/long-api-call-delay", token))
+                {
+                    var content = await httpResponse.Content.ReadAsStringAsync();
+                }
+
+                MessageLongHTTPRequestDelay = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageLongHTTPRequestDelay = "Task was cancelled.";
+
+            }
+            catch (Exception ex)
+            {
+                MessageLongHTTPRequestDelay = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                _ctsLongHTTPRequestDelay.Dispose();
+                _ctsLongHTTPRequestDelay = null;
+
+                IsStartButtonDisabled_LongHTTPRequestDelay = false;
+                IsCancelButtonDisabled_LongHTTPRequestDelay = true;
+                StateHasChanged();
+            }
+
+        }
+
+        public void CancelButton_LongHTTPRequestDelay_Click()
+        {
+            _ctsLongHTTPRequestDelay.Cancel();
+            IsCancelButtonDisabled_LongHTTPRequestDelay = true;
+        }
+
+        #endregion
+
+
         public async Task<LinkedList<string>> ReadFileAsync(string path)
         {
             var lines = new LinkedList<string>();

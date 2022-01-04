@@ -15,7 +15,7 @@ namespace PopulationCensus.Server.Services
 
         public async Task<IEnumerable<CensusAreaData>> GetAllDataAsync(CancellationToken token)
         {
-            var a = await _unitOfWork.CensusAreaDataRepository.GetListAsync(cancellationToken: token, take: 1000000);
+            var a = await _unitOfWork.CensusAreaDataRepository.GetListAsync(cancellationToken: token, take: 10000000);
             return a;
         }
     }
