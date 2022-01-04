@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PopulationCensus.Data.Entities;
 using PopulationCensus.Server.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace PopulationCensus.Server.Controllers
 {
@@ -15,9 +17,21 @@ namespace PopulationCensus.Server.Controllers
         [HttpGet("census-data/all")]
         public async Task<IActionResult> GetAllCensusData(CancellationToken token = default(CancellationToken))
         {
-            var a = await _censusDataService.GetAllDataAsync(token);
+            var a = await _censusDataService.GetLimitedCensusData(token);
 
             return Ok(a);
+        }
+
+        [HttpGet("census-data/one-by-one")]
+        public async IAsyncEnumerable<CensusAreaData> GetDataOneByOne([EnumeratorCancellation] CancellationToken token = default(CancellationToken))
+        {
+            var a = _censusDataService.GetAllCensusData(token);
+
+            await foreach (var product in a)
+            {
+                await Task.Delay(2000);
+                yield return product;
+            }
         }
     }
 }

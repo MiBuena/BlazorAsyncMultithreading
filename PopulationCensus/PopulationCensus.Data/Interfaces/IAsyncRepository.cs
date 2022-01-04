@@ -20,6 +20,13 @@ namespace PopulationCensus.Data.Interfaces
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             CancellationToken cancellationToken = default);
+        
+        IAsyncEnumerable<TEntity> GetOneByOneAsync(
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            CancellationToken cancellationToken = default,
+            int skip = 0,
+            int take = int.MaxValue);
 
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);

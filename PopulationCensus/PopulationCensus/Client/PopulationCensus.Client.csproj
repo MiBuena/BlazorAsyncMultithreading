@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\PopulationCensus.Data\PopulationCensus.Data.csproj" />
     <ProjectReference Include="..\Shared\PopulationCensus.Shared.csproj" />
   </ItemGroup>
 

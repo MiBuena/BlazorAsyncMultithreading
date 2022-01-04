@@ -1,6 +1,7 @@
 ﻿using PopulationCensus.Data.Entities;
 using PopulationCensus.Data.Interfaces;
 using PopulationCensus.Server.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace PopulationCensus.Server.Services
 {
@@ -13,10 +14,20 @@ namespace PopulationCensus.Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<CensusAreaData>> GetAllDataAsync(CancellationToken token)
+        public async Task<IEnumerable<CensusAreaData>> GetLimitedCensusData(CancellationToken token)
         {
-            var a = await _unitOfWork.CensusAreaDataRepository.GetListAsync(cancellationToken: token, take: 10000000);
+            var a = await _unitOfWork.CensusAreaDataRepository.GetListAsync(cancellationToken: token, take: 1000000);
             return a;
+        }
+
+        public async IAsyncEnumerable<CensusAreaData> GetAllCensusData([EnumeratorCancellation] CancellationToken token)
+        {
+            var a = _unitOfWork.CensusAreaDataRepository.GetOneByOneAsync(cancellationToken: token, take: 1000000);
+
+           await foreach (var stockPrice in a)
+            {
+                yield return stockPrice;
+            }
         }
     }
 }

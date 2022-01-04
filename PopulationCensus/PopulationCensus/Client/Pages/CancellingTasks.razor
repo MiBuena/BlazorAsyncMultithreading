@@ -90,3 +90,50 @@
 <div>@MessageTimeOut</div>
 
 </div>
+
+
+<br />
+<br />
+<br />
+
+<div style="border-style: solid; padding: 50px; height: 190px;">
+    
+<div><span>Get data one by one Cancel after a certain period of time</span></div>
+
+<br />
+
+<button @onclick="@StartButton_OneByOne_Click" disabled="@IsStartButtonDisabled_OneByOne">Start</button>
+
+<button @onclick="@CancelButton_OneByOne_Click" disabled="@IsCancelButtonDisabled_OneByOne">Cancel</button>
+
+<div>@MessageOneByOne</div>
+
+</div>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.AgeId</td>
+                    <td>@forecast.AreaId</td>
+                    <td>@forecast.EthnicityId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

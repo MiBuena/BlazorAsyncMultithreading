@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
+using PopulationCensus.Data.Entities;
+using System.Text.Json;
 
 namespace PopulationCensus.Client.Pages
 {
@@ -224,8 +227,6 @@ namespace PopulationCensus.Client.Pages
 
         #endregion
 
-
-
         #region Cancel after a certain period of time
 
         public bool IsStartButtonDisabled_TimeOut { get; set; } = false;
@@ -282,6 +283,83 @@ namespace PopulationCensus.Client.Pages
         }
 
         #endregion
+
+        #region Cancel when getting one by one
+
+        public bool IsStartButtonDisabled_OneByOne { get; set; } = false;
+        public bool IsCancelButtonDisabled_OneByOne { get; set; } = true;
+        public string MessageOneByOne { get; set; }
+
+        private CancellationTokenSource _ctsOneByOne;
+
+        private List<CensusAreaData> forecasts = new List<CensusAreaData>();
+
+        public async void StartButton_OneByOne_Click()
+        {
+            IsStartButtonDisabled_OneByOne = true;
+            IsCancelButtonDisabled_OneByOne = false;
+            MessageOneByOne = null;
+
+            try
+            {
+                _ctsOneByOne = new CancellationTokenSource();
+                CancellationToken token = _ctsOneByOne.Token;
+
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "census-data/one-by-one");
+                request.SetBrowserResponseStreamingEnabled(true);
+
+                using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+                response.EnsureSuccessStatusCode();
+
+                var responseStream = await response.Content.ReadAsStreamAsync();
+
+                IAsyncEnumerable<CensusAreaData> weatherForecasts = JsonSerializer.DeserializeAsyncEnumerable<CensusAreaData>(
+         responseStream,
+         new JsonSerializerOptions
+         {
+             PropertyNameCaseInsensitive = true,
+             DefaultBufferSize = 128
+         });
+
+                await foreach (var item in weatherForecasts)
+                {
+                    forecasts.Add(item);
+                    StateHasChanged();
+                }
+
+                MessageOneByOne = "Task completed successfully.";
+            }
+            catch (OperationCanceledException ex)
+            {
+                MessageOneByOne = "Task was cancelled.";
+
+            }
+            catch (Exception ex)
+            {
+                MessageOneByOne = "Task completed with error.";
+                throw;
+            }
+            finally
+            {
+                _ctsOneByOne.Dispose();
+                _ctsOneByOne = null;
+
+                IsStartButtonDisabled_OneByOne = false;
+                IsCancelButtonDisabled_OneByOne = true;
+                StateHasChanged();
+            }
+
+        }
+
+        public void CancelButton_OneByOne_Click()
+        {
+            _ctsOneByOne.Cancel();
+            IsCancelButtonDisabled_OneByOne = true;
+        }
+
+        #endregion
+
 
         public async Task<LinkedList<string>> ReadFileAsync(string path)
         {

@@ -38,6 +38,25 @@ namespace PopulationCensus.Data.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public virtual async IAsyncEnumerable<TEntity> GetOneByOneAsync(
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            CancellationToken cancellationToken = default,
+            int skip = 0,
+            int take = int.MaxValue)
+        {
+            var query = ApplyCommonManipulations(filter, orderBy, skip);
+
+            var a = await query
+                .Take(take)
+                .ToListAsync(cancellationToken);
+
+            foreach (var item in a)
+            {
+                yield return item;
+            }
+        }
+
         public async Task<TEntity> FirstOrDefaultAsync(
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
