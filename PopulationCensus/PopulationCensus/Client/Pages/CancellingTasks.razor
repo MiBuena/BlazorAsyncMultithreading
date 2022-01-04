@@ -37,6 +37,28 @@
 
 </div>
 
+<br />
+<br />
+<br />
+
+<div style="border-style: solid; padding: 50px; height: 190px;">
+
+<div><span>Cancelling long DB Request</span></div>
+
+<br />
+
+<button @onclick="@StartButton_LongDBRequest_Click" disabled="@IsStartButtonDisabled_LongDBRequest">Start</button>
+
+<button @onclick="@CancelButton_LongDBRequest_Click" disabled="@IsCancelButtonDisabled_LongDBRequest">Cancel</button>
+
+<div>@MessageLongDBRequest</div>
+
+</div> 
+
+<br />
+<br />
+<br />
+
 <div style="border-style: solid; padding: 50px; height: 190px;">
     
 <div><span>Cancel a long http operation delay</span></div>
