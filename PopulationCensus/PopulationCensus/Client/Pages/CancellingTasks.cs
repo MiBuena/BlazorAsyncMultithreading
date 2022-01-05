@@ -308,7 +308,7 @@ namespace PopulationCensus.Client.Pages
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "census-data/one-by-one");
                 request.SetBrowserResponseStreamingEnabled(true);
 
-                using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+                using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token);
 
                 response.EnsureSuccessStatusCode();
 
