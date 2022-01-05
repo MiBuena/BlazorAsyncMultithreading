@@ -27,9 +27,10 @@ namespace PopulationCensus.Server.Controllers
         {
             var a = _censusDataService.GetAllCensusData(token);
 
-            await foreach (var product in a)
+            await foreach (var product in a.WithCancellation(token))
             {
-                await Task.Delay(2000);
+                token.ThrowIfCancellationRequested();
+                await Task.Delay(5000);
                 yield return product;
             }
         }

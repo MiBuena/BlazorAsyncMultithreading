@@ -24,8 +24,9 @@ namespace PopulationCensus.Server.Services
         {
             var a = _unitOfWork.CensusAreaDataRepository.GetOneByOneAsync(cancellationToken: token, take: 1000000);
 
-           await foreach (var stockPrice in a)
+            await foreach (var stockPrice in a.WithCancellation(token))
             {
+                token.ThrowIfCancellationRequested();
                 yield return stockPrice;
             }
         }

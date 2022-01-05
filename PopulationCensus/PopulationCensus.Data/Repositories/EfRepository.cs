@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace PopulationCensus.Data.Repositories
         public virtual async IAsyncEnumerable<TEntity> GetOneByOneAsync(
             Expression<Func<TEntity, bool>>? filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            CancellationToken cancellationToken = default,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default,
             int skip = 0,
             int take = int.MaxValue)
         {
