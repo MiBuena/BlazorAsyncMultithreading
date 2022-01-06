@@ -166,11 +166,10 @@ namespace PopulationCensus.Server.Services
             return collection;
         }
 
-        public async Task ImportCensusDataFileAsync()
+        public async Task ImportCensusDataFileAsync4(CancellationToken token = default(CancellationToken))
         {
-
-            Stopwatch a = Stopwatch.StartNew();
-            a.Start();
+            var timer = new Stopwatch();
+            timer.Start();
 
             var years = await _unitOfWork.YearsRepository.GetListAsync();
             var ages = await _unitOfWork.AgesRepository.GetListAsync();
@@ -187,48 +186,80 @@ namespace PopulationCensus.Server.Services
 
             var fileContent = _fileService.ReadLargeFileWithBufferReadInPortions("Files/Data8277Half.csv");
 
+            var totalList = new LinkedList<CensusAreaData>();
+
+
             await foreach (var item in fileContent)
             {
-                var censusEntities = item.AsParallel().AsOrdered()
-                    .Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary))
-                    .ToList();
+                var censusEntities = item
+                    .AsParallel()
+                    .AsOrdered()
+                    .WithCancellation(token)
+                    .Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary));
 
-                try
-                {
-
-                
-
-                _unitOfWork.CensusAreaDataRepository.AddRange(censusEntities);
-                await _unitOfWork.SaveChangesAsync();
-
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-                //A(censusEntities);
-
-                Console.WriteLine();
+                censusEntities.Select(x => totalList.AddLast(x));
             }
 
+            timer.Stop();
 
+            TimeSpan timeTaken = timer.Elapsed;
 
-
-
-            TimeSpan timeTaken = a.Elapsed;
-
-
-
-
-
-            TimeSpan timeTaken4 = a.Elapsed;
-
-     
-
-            //TimeSpan timeTaken8 = a.Elapsed;
         }
 
+        public async Task ImportCensusDataFileAsync8()
+        {
+
+            var timer = new Stopwatch();
+            timer.Start();
+
+            var years = await _unitOfWork.YearsRepository.GetListAsync();
+            var ages = await _unitOfWork.AgesRepository.GetListAsync();
+            var ethnicities = await _unitOfWork.EthnicitiesRepository.GetListAsync();
+            var genders = await _unitOfWork.GendersRepository.GetListAsync();
+            var areas = await _unitOfWork.AreasRepository.GetListAsync();
+
+
+            var yearsDictionary = years.ToDictionary(x => x.Code);
+            var ageDictionary = ages.ToDictionary(x => x.Code);
+            var ethnicitiesDictionary = ethnicities.ToDictionary(x => x.Code);
+            var gendersDictionary = genders.ToDictionary(x => x.Code);
+            var areasDictionary = areas.ToDictionary(x => x.Code);
+
+            var fileContent = await _fileService.ReadLargeFileWithBufferRead("Files/Data8277Half.csv");
+
+
+            var totalList = new LinkedList<CensusAreaData>();
+
+            foreach (var item in fileContent)
+            {
+                var b = ExtractCensusDataEntity(item, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
+                totalList.AddLast(b);
+            }
+
+            //        TimeSpan sequentialLoop = timer.Elapsed;
+            //        timer.Restart();
+
+            //        var totalList2 = new LinkedList<CensusAreaData>();
+
+
+            //        var censusEntities = fileContent
+            //.AsParallel()
+            //.AsOrdered()
+            //.Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary))
+            //.ToList();
+
+            //        TimeSpan plinq = timer.Elapsed;
+            //        timer.Restart();
+
+            //        var a = from x in fileContent.AsParallel().AsOrdered()
+            //                select ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
+
+            //        var m = a.ToList();
+
+            TimeSpan plinq2 = timer.Elapsed;
+            timer.Stop();
+
+        }
 
         private CensusAreaData ExtractCensusDataEntity(string line, IDictionary<string, Year> years,
             IDictionary<string, Age> ages, IDictionary<string, Ethnicity> ethnicities,

@@ -66,6 +66,11 @@ namespace PopulationCensus.Client.Pages
         {
             var httpResponse = await _client.GetAsync("upload/4");
         }
+
+        public async void UploadLargeCensusDataFile8()
+        {
+            var httpResponse = await _client.GetAsync("upload/8");
+        }
     }
 }
 

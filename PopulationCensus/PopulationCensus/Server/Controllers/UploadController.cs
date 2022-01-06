@@ -97,20 +97,29 @@ namespace PopulationCensus.Server.Controllers
         [HttpGet("upload/4")]
         public async Task<IActionResult> UploadCensusDataFile()
         {
-            await _importService.ImportCensusDataFileAsync();
+            await _importService.ImportCensusDataFileAsync4();
             return StatusCode(200);
         }
+
+        [HttpGet("upload/8")]
+        public async Task<IActionResult> UploadCensusDataFile8()
+        {
+            await _importService.ImportCensusDataFileAsync8();
+            return StatusCode(200);
+        }
+
 
         [HttpGet("upload/long-api-call")]
         public async Task<IActionResult> LongApiCall(CancellationToken token = default(CancellationToken))
         {
-            for (var i = 0; i < 10; i++)
-            {
-                token.ThrowIfCancellationRequested();
+            //for (var i = 0; i < 10; i++)
+            //{
+            //    token.ThrowIfCancellationRequested();
 
-                System.Diagnostics.Debug.WriteLine(i);
-                await Task.Delay(1000);
-            }
+            //    System.Diagnostics.Debug.WriteLine(i);
+            //    await Task.Delay(1000);
+            //}
+            await _importService.ImportCensusDataFileAsync4(token);
 
             return StatusCode(200);
         }

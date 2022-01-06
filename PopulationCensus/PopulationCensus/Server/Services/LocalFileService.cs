@@ -129,7 +129,7 @@ namespace PopulationCensus.Server.Services
                         {
                             lines.AddLast(line);
 
-                            if (lines.Count == 1000)
+                            if (lines.Count == 100000)
                             {
                                 yield return lines;
                                 lines = new LinkedList<string>();
@@ -141,6 +141,8 @@ namespace PopulationCensus.Server.Services
 
             yield return lines;
         }
+
+
 
         public async Task<List<string>> ReadLargeFileWithBufferReadList(string path)
         {
