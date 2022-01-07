@@ -7,7 +7,7 @@
         Task ImportEthnicityFileAsync(IFormFile file);
         Task ImportGenderFileAsync(IFormFile file);
         Task ImportYearsFileAsync(IFormFile file);
-        Task ImportCensusDataFileAsync4(CancellationToken token = default(CancellationToken));
-        Task ImportCensusDataFileAsync8(CancellationToken token = default(CancellationToken));
+        Task ReadCensusDataFileWithIAsyncEnumerableAsync(CancellationToken token = default(CancellationToken));
+        Task ProcessCensusDataInParallelAsync(CancellationToken token = default(CancellationToken));
     }
 }

@@ -97,14 +97,14 @@ namespace PopulationCensus.Server.Controllers
         [HttpGet("upload/4")]
         public async Task<IActionResult> UploadCensusDataFile()
         {
-            await _importService.ImportCensusDataFileAsync4();
+            await _importService.ReadCensusDataFileWithIAsyncEnumerableAsync();
             return StatusCode(200);
         }
 
         [HttpGet("upload/8")]
         public async Task<IActionResult> UploadCensusDataFile8()
         {
-            await _importService.ImportCensusDataFileAsync8();
+            await _importService.ProcessCensusDataInParallelAsync();
             return StatusCode(200);
         }
 
@@ -120,7 +120,7 @@ namespace PopulationCensus.Server.Controllers
             //    await Task.Delay(1000);
             //}
             //await _importService.ImportCensusDataFileAsync4(token);
-            await _importService.ImportCensusDataFileAsync8(token);
+            await _importService.ProcessCensusDataInParallelAsync(token);
 
             return StatusCode(200);
         }
