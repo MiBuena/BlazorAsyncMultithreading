@@ -188,16 +188,10 @@ namespace PopulationCensus.Server.Services
 
             var totalList = new LinkedList<CensusAreaData>();
 
-
             await foreach (var item in fileContent)
             {
-                var censusEntities = item
-                    .AsParallel()
-                    .AsOrdered()
-                    .WithCancellation(token)
-                    .Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary));
-
-                censusEntities.Select(x => totalList.AddLast(x));
+                var a = ExtractCensusDataEntity(item, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
+                totalList.AddLast(a);
             }
 
             timer.Stop();
@@ -206,11 +200,10 @@ namespace PopulationCensus.Server.Services
 
         }
 
-        public async Task ImportCensusDataFileAsync8()
+        public async Task ImportCensusDataFileAsync8(CancellationToken token = default(CancellationToken))
         {
 
-            var timer = new Stopwatch();
-            timer.Start();
+       
 
             var years = await _unitOfWork.YearsRepository.GetListAsync();
             var ages = await _unitOfWork.AgesRepository.GetListAsync();
@@ -228,25 +221,28 @@ namespace PopulationCensus.Server.Services
             var fileContent = await _fileService.ReadLargeFileWithBufferRead("Files/Data8277Half.csv");
 
 
-            var totalList = new LinkedList<CensusAreaData>();
+            var timer = new Stopwatch();
+            timer.Start();
 
-            foreach (var item in fileContent)
-            {
-                var b = ExtractCensusDataEntity(item, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
-                totalList.AddLast(b);
-            }
+            //var totalList = new LinkedList<CensusAreaData>();
 
-            //        TimeSpan sequentialLoop = timer.Elapsed;
-            //        timer.Restart();
+            //foreach (var item in fileContent)
+            //{
+            //    var b = ExtractCensusDataEntity(item, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
+            //    totalList.AddLast(b);
+            //}
 
-            //        var totalList2 = new LinkedList<CensusAreaData>();
+            TimeSpan sequentialLoop = timer.Elapsed;
+            timer.Restart();
 
 
-            //        var censusEntities = fileContent
-            //.AsParallel()
-            //.AsOrdered()
-            //.Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary))
-            //.ToList();
+
+            var censusEntities = fileContent
+    .AsParallel()
+    .AsOrdered()
+    .WithCancellation(token)
+    .Select(x => ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary))
+    .ToList();
 
             //        TimeSpan plinq = timer.Elapsed;
             //        timer.Restart();
@@ -255,6 +251,7 @@ namespace PopulationCensus.Server.Services
             //                select ExtractCensusDataEntity(x, yearsDictionary, ageDictionary, ethnicitiesDictionary, gendersDictionary, areasDictionary);
 
             //        var m = a.ToList();
+
 
             TimeSpan plinq2 = timer.Elapsed;
             timer.Stop();
@@ -287,6 +284,35 @@ namespace PopulationCensus.Server.Services
             };
 
             return ethnicityEntity;
+        }
+
+        private void ExtractCensusDataEntity(string line, IDictionary<string, Year> years,
+    IDictionary<string, Age> ages, IDictionary<string, Ethnicity> ethnicities,
+    IDictionary<string, Gender> genders, IDictionary<string, Area> areas,
+    LinkedList<CensusAreaData> collection)
+        {
+            var ethnicityData = line.Split(',');
+
+            var year = years[ethnicityData[0]];
+            var age = ages[ethnicityData[1]];
+            var ethnicity = ethnicities[ethnicityData[2]];
+            var gender = genders[ethnicityData[3]];
+            var area = areas[ethnicityData[4]];
+
+            int count = 0;
+            int.TryParse(ethnicityData[5], out count);
+
+            var ethnicityEntity = new CensusAreaData()
+            {
+                YearId = year.Id,
+                AgeId = age.Id,
+                EthnicityId = ethnicity.Id,
+                GenderId = gender.Id,
+                AreaId = area.Id,
+                Count = count
+            };
+
+            collection.AddLast(ethnicityEntity);
         }
 
         //public void A(IEnumerable<CensusAreaData> inputCollection)

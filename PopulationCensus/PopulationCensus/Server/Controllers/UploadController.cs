@@ -119,7 +119,8 @@ namespace PopulationCensus.Server.Controllers
             //    System.Diagnostics.Debug.WriteLine(i);
             //    await Task.Delay(1000);
             //}
-            await _importService.ImportCensusDataFileAsync4(token);
+            //await _importService.ImportCensusDataFileAsync4(token);
+            await _importService.ImportCensusDataFileAsync8(token);
 
             return StatusCode(200);
         }

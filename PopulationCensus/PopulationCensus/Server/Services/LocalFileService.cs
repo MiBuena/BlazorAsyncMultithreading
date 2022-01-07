@@ -58,14 +58,14 @@ namespace PopulationCensus.Server.Services
 
         public async IAsyncEnumerable<string> ReadFileAsStream([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            using(var reader = _readerWrapper.GetStreamReader("Files/Data8277.csv"))
+            using (var reader = _readerWrapper.GetStreamReader("Files/Data8277.csv"))
             {
                 await reader.ReadLineAsync();
 
                 string? line;
-                while((line = await reader.ReadLineAsync()) != null)
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    if(cancellationToken.IsCancellationRequested)
+                    if (cancellationToken.IsCancellationRequested)
                     {
                         break;
                     }
@@ -112,10 +112,8 @@ namespace PopulationCensus.Server.Services
             return lines;
         }
 
-        public async IAsyncEnumerable<LinkedList<string>> ReadLargeFileWithBufferReadInPortions(string path)
+        public async IAsyncEnumerable<string> ReadLargeFileWithBufferReadInPortions(string path)
         {
-            var lines = new LinkedList<string>();
-
             using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (BufferedStream bs = new BufferedStream(fs))
@@ -127,19 +125,11 @@ namespace PopulationCensus.Server.Services
                         string? line;
                         while ((line = await sr.ReadLineAsync()) != null)
                         {
-                            lines.AddLast(line);
-
-                            if (lines.Count == 100000)
-                            {
-                                yield return lines;
-                                lines = new LinkedList<string>();
-                            }
+                            yield return line;
                         }
                     }
                 }
             }
-
-            yield return lines;
         }
 
 

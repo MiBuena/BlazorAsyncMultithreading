@@ -14,6 +14,6 @@ namespace PopulationCensus.Server.Interfaces
 
         Task<LinkedList<string>> ReadLargeFileWithBufferRead(string path);
 
-        IAsyncEnumerable<LinkedList<string>> ReadLargeFileWithBufferReadInPortions(string path);
+        IAsyncEnumerable<string> ReadLargeFileWithBufferReadInPortions(string path);
     }
 }
