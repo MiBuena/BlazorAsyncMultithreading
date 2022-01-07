@@ -65,11 +65,7 @@ namespace PopulationCensus.Server.Services
                 string? line;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
+                    cancellationToken.ThrowIfCancellationRequested();
                     yield return line;
                 }
             }
